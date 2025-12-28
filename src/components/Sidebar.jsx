@@ -88,7 +88,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
 
       <style>{`
         .sidebar {
-          width: 260px;
+          width: 300px;
           background-color: var(--bg-sidebar);
           border-right: 1px solid var(--border-color);
           display: flex;
@@ -126,7 +126,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
         }
         .logo-text {
           font-weight: 700;
-          font-size: 1.1rem;
+          font-size: 0.95rem;
           letter-spacing: -0.5px;
           white-space: nowrap;
           overflow: hidden;
