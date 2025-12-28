@@ -4,7 +4,7 @@ import {
     History, PenTool, Sparkles, Send
 } from 'lucide-react';
 
-const ReportingInterface = ({ onBack, study }) => {
+const ReportingInterface = ({ onBack, study, user }) => {
     const [reportText, setReportText] = useState(
         `EXAM: ${study?.description || 'CT SCAN'}
     
@@ -97,7 +97,7 @@ IMPRESSION:
                     <div className="editor-footer">
                         <div className="signature-section">
                             <PenTool size={16} />
-                            <span>Digital Signature: Dr. Smith (Verified)</span>
+                            <span>Digital Signature: {user?.name || 'Dr. Smith'} (Verified)</span>
                         </div>
                         <button className="btn btn-primary">
                             <Send size={16} /> Sign & Finalize

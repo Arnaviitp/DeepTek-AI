@@ -60,6 +60,7 @@ const DashboardLayout = ({ user, onLogout }) => {
           <ReportingInterface
             study={selectedStudy}
             onBack={() => setActivePage('worklist')}
+            user={user}
           />
         )}
       </main>

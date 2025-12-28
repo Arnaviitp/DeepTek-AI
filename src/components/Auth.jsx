@@ -32,9 +32,34 @@ const Auth = ({ onLogin, initialMode = true }) => {
         // Simulate API call
         setTimeout(() => {
             setLoading(false);
+
+            let userName = formData.name;
+
+            if (!isLogin) {
+                // Sign Up Flow: Save user to localStorage
+                const userToSave = {
+                    name: formData.name,
+                    email: formData.email,
+                };
+                localStorage.setItem('augmento_user', JSON.stringify(userToSave));
+            } else {
+                // Login Flow: Retrieve name if email matches
+                const storedUser = localStorage.getItem('augmento_user');
+                if (storedUser) {
+                    const parsedUser = JSON.parse(storedUser);
+                    if (parsedUser.email === formData.email) {
+                        userName = parsedUser.name;
+                    } else {
+                        userName = 'Dr. Smith'; // Default fallback
+                    }
+                } else {
+                    userName = 'Dr. Smith'; // Default fallback
+                }
+            }
+
             // Mock successful login/signup
             onLogin({
-                name: isLogin ? 'Dr. Smith' : formData.name,
+                name: userName,
                 email: formData.email
             });
         }, 1500);
