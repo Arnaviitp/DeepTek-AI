@@ -7,9 +7,19 @@ import PublicLayout from './components/public/PublicLayout';
 // Public Pages
 import Home from './pages/Home';
 import Careers from './pages/Careers';
+import JobDetails from './pages/JobDetails';
 import Pricing from './pages/Pricing';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import RequestDemo from './pages/RequestDemo';
+import Features from './pages/Features';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Security from './pages/Security';
+import Integrations from './pages/Integrations';
+import Changelog from './pages/Changelog';
 
 // Dashboard Components
 import Sidebar from './components/Sidebar';
@@ -24,6 +34,8 @@ import Settings from './components/Settings';
 import Auth from './components/Auth';
 import FAQ from './components/FAQ';
 import Support from './components/Support';
+import Billing from './components/Billing';
+import MSWordAddIn from './components/MSWordAddIn';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ isAuthenticated, children }) => {
@@ -53,9 +65,11 @@ const DashboardLayout = ({ user, onLogout }) => {
         {activePage === 'clients' && <ClientManagement />}
         {activePage === 'hanging_protocol' && <HangingProtocol />}
         {activePage === 'analytics' && <Analytics />}
+        {activePage === 'billing' && <Billing />}
         {activePage === 'settings' && <Settings />}
         {activePage === 'faq' && <FAQ />}
         {activePage === 'support' && <Support />}
+        {activePage === 'ms_word' && <MSWordAddIn />}
         {activePage === 'reporting' && (
           <ReportingInterface
             study={selectedStudy}
@@ -104,10 +118,19 @@ function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/careers/:id" element={<JobDetails />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
-          <Route path="/careers/:id" element={<div className="p-20 text-center">Job Details Interface Coming Soon</div>} />
+          <Route path="/request-demo" element={<RequestDemo />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/integrations" element={<Integrations />} />
+          <Route path="/changelog" element={<Changelog />} />
         </Route>
 
         {/* Auth Routes */}

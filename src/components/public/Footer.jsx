@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Twitter, Linkedin, Github, Mail } from 'lucide-react';
+import { Twitter, Linkedin, Github, Mail, Youtube } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -18,14 +18,41 @@ const Footer = () => {
                             Empowering radiologists and healthcare professionals with advanced AI diagnostics and streamlined workflow solutions.
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-all">
+                            <a
+                                href="https://twitter.com/deeptekAI"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
+                                title="Follow us on Twitter"
+                            >
                                 <Twitter className="w-4 h-4" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-all">
+                            <a
+                                href="https://linkedin.com/company/deeptek-ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
+                                title="Connect on LinkedIn"
+                            >
                                 <Linkedin className="w-4 h-4" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-all">
+                            <a
+                                href="https://github.com/deeptek-ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-all"
+                                title="View our GitHub"
+                            >
                                 <Github className="w-4 h-4" />
+                            </a>
+                            <a
+                                href="https://youtube.com/@deeptekAI"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-red-500/20 hover:text-red-400 transition-all"
+                                title="Subscribe on YouTube"
+                            >
+                                <Youtube className="w-4 h-4" />
                             </a>
                         </div>
                     </div>
@@ -37,6 +64,7 @@ const Footer = () => {
                             <li><Link to="/pricing" className="hover:text-blue-400 transition-colors">Pricing</Link></li>
                             <li><Link to="/integrations" className="hover:text-blue-400 transition-colors">Integrations</Link></li>
                             <li><Link to="/changelog" className="hover:text-blue-400 transition-colors">Changelog</Link></li>
+                            <li><Link to="/request-demo" className="hover:text-blue-400 transition-colors">Request Demo</Link></li>
                         </ul>
                     </div>
 
@@ -66,7 +94,9 @@ const Footer = () => {
                     </p>
                     <div className="flex items-center gap-2 text-gray-500 text-xs">
                         <Mail className="w-3 h-3" />
-                        <span>hello@deepak.ai</span>
+                        <a href="mailto:hello@deeptek.ai" className="hover:text-blue-400 transition-colors">
+                            hello@deeptek.ai
+                        </a>
                     </div>
                 </div>
             </div>

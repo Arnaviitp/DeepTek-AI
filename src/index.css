@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Custom CSS variables and utilities - Tailwind is loaded from tailwind.css */
 
 :root {
   /* Core Backgrounds - Deep Navy */

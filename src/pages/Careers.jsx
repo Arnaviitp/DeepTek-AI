@@ -8,7 +8,7 @@ const Careers = () => {
             id: 1,
             title: 'Senior AI Engineer',
             department: 'Engineering',
-            location: 'San Francisco, CA',
+            location: 'Ranchi, India',
             type: 'Full-time'
         },
         {
@@ -22,7 +22,7 @@ const Careers = () => {
             id: 3,
             title: 'Product Designer',
             department: 'Design',
-            location: 'New York, NY',
+            location: 'Ranchi, India',
             type: 'Full-time'
         },
         {

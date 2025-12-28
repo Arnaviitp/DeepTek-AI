@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, List, Activity, Settings, HelpCircle, LogOut, FileText, Users,
-  Receipt, Clipboard, Phone, MessageCircle, ChevronLeft, ChevronRight, Menu
+  Receipt, Clipboard, Phone, MessageCircle, ChevronLeft, ChevronRight, CreditCard
 } from 'lucide-react';
 
-const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
+const Sidebar = ({ activePage = 'dashboard', onNavigate, onLogout }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -13,7 +13,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
         <div className="logo-icon">
           {isCollapsed ? <Activity color="#3b82f6" size={24} /> : <Activity color="#3b82f6" size={24} />}
         </div>
-        {!isCollapsed && <span className="logo-text">Augmento DeepTek AI</span>}
+        {!isCollapsed && <span className="logo-text">DeepTek AI</span>}
         <button
           className="collapse-toggle"
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -26,6 +26,10 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
       <nav className="nav-menu">
         {/* Main Section */}
         <NavItem
+          icon={LayoutDashboard} label="Dashboard" page="dashboard"
+          activePage={activePage} onNavigate={onNavigate} collapsed={isCollapsed}
+        />
+        <NavItem
           icon={List} label="Study List" page="worklist"
           activePage={activePage} onNavigate={onNavigate} collapsed={isCollapsed}
         />
@@ -34,7 +38,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
           activePage={activePage} onNavigate={onNavigate} collapsed={isCollapsed}
         />
         <NavItem
-          icon={Receipt} label="Billing" page="billing"
+          icon={CreditCard} label="Billing" page="billing"
           activePage={activePage} onNavigate={onNavigate} collapsed={isCollapsed}
         />
 
@@ -88,7 +92,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
 
       <style>{`
         .sidebar {
-          width: 300px;
+          width: 280px;
           background-color: var(--bg-sidebar);
           border-right: 1px solid var(--border-color);
           display: flex;
@@ -126,7 +130,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
         }
         .logo-text {
           font-weight: 700;
-          font-size: 0.95rem;
+          font-size: 1rem;
           letter-spacing: -0.5px;
           white-space: nowrap;
           overflow: hidden;
@@ -184,7 +188,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
           width: 100%;
           text-align: left;
           font-family: inherit;
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           white-space: nowrap;
         }
         .sidebar.collapsed .nav-item {
@@ -207,7 +211,7 @@ const Sidebar = ({ activePage = 'worklist', onNavigate, onLogout }) => {
         }
         
         .nav-section-title {
-           font-size: 0.75rem;
+           font-size: 0.7rem;
            font-weight: 700;
            color: var(--text-muted);
            margin-top: 1.5rem;

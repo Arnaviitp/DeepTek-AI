@@ -71,7 +71,7 @@ const DashboardHome = ({ user, onNavigate }) => {
                 <div className="card chart-section">
                     <div className="card-header">
                         <h3>Weekly Reporting Activity</h3>
-                        <button className="btn-text">View Details</button>
+                        <button className="btn-text" onClick={() => onNavigate('analytics')}>View Details</button>
                     </div>
                     <div style={{ height: '250px', width: '100%' }}>
                         <ResponsiveContainer>
@@ -120,7 +120,7 @@ const DashboardHome = ({ user, onNavigate }) => {
                                 <h4>Pending Review</h4>
                                 <p>5 cases waiting for QC validation</p>
                             </div>
-                            <button className="btn-sm text-only">View QC</button>
+                            <button className="btn-sm text-only" onClick={() => onNavigate('worklist')}>View QC</button>
                         </div>
                     </div>
                 </div>
