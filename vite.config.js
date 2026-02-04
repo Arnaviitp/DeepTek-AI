@@ -7,13 +7,10 @@ export default defineConfig({
 
   // Build optimizations for production
   build: {
-    // Enable minification
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
+    // Use esbuild for minification (built into Vite, no external dependency)
+    minify: 'esbuild',
+    esbuild: {
+      drop: ['console', 'debugger'],
     },
     // Split chunks for better caching
     rollupOptions: {
