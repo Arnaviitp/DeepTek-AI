@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Calendar, Users, Building2, Mail, Phone, Clock, CheckCircle, ArrowRight } from 'lucide-react';
+import { Calendar, Users, Building2, Clock, CheckCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '../components/Toast';
+import { demoStorage, validate } from '../utils/storage';
 
 const RequestDemo = () => {
+    const toast = useToast();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -14,23 +17,82 @@ const RequestDemo = () => {
         preferredTime: '',
         message: ''
     });
+    const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    const handleSubmit = (e) => {
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!validate.required(formData.name)) {
+            newErrors.name = 'Name is required';
+        }
+
+        if (!validate.required(formData.email)) {
+            newErrors.email = 'Email is required';
+        } else if (!validate.email(formData.email)) {
+            newErrors.email = 'Please enter a valid work email';
+        }
+
+        if (!validate.required(formData.company)) {
+            newErrors.company = 'Company name is required';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        setLoading(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Save to localStorage
+        demoStorage.add(formData);
+
+        setLoading(false);
         setSubmitted(true);
+        toast.success('Demo request submitted! Our team will contact you soon.');
     };
 
     if (submitted) {
         return (
             <div className="py-24 px-6 max-w-3xl mx-auto text-center">
-                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-8">
+                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-8 animate-scale-in">
                     <CheckCircle className="w-10 h-10 text-green-500" />
                 </div>
                 <h1 className="text-4xl font-bold mb-4">Demo Request Received!</h1>
-                <p className="text-xl text-gray-400 mb-8">
-                    Thank you for your interest in DeepTek AI. Our team will reach out within 24 hours to schedule your personalized demo.
+                <p className="text-xl text-gray-400 mb-4">
+                    Thank you for your interest in DeepTek AI.
                 </p>
+                <p className="text-gray-400 mb-8">
+                    Our team will reach out to <span className="text-blue-400">{formData.email}</span> within 24 hours to schedule your personalized demo.
+                </p>
+                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 mb-8 text-left max-w-md mx-auto">
+                    <h3 className="font-semibold mb-4 text-center">What happens next?</h3>
+                    <ul className="space-y-3 text-sm text-gray-400">
+                        <li className="flex items-start gap-3">
+                            <span className="w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                            <span>You'll receive a confirmation email shortly</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                            <span>Our team will call you to confirm the demo time</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                            <span>Get a personalized demo tailored to your needs</span>
+                        </li>
+                    </ul>
+                </div>
                 <Link to="/" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-500 transition-all">
                     Return to Home
                     <ArrowRight className="w-4 h-4" />
@@ -76,7 +138,7 @@ const RequestDemo = () => {
                                     desc: 'Discuss your specific needs and implementation timeline.'
                                 }
                             ].map((item, i) => (
-                                <div key={i} className="flex gap-4">
+                                <div key={i} className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors">
                                     <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
                                         <item.icon className="w-6 h-6 text-blue-400" />
                                     </div>
@@ -120,21 +182,23 @@ const RequestDemo = () => {
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Full Name *</label>
                                     <input
                                         type="text"
-                                        required
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors ${errors.name ? 'border-red-500' : 'border-white/10'}`}
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        placeholder="Dr. John Smith"
                                     />
+                                    {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Work Email *</label>
                                     <input
                                         type="email"
-                                        required
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors ${errors.email ? 'border-red-500' : 'border-white/10'}`}
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        placeholder="john@hospital.com"
                                     />
+                                    {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
                                 </div>
                             </div>
 
@@ -143,20 +207,22 @@ const RequestDemo = () => {
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
                                     <input
                                         type="tel"
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
                                         value={formData.phone}
                                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                        placeholder="+91 98765 43210"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-2">Company *</label>
+                                    <label className="block text-sm font-medium text-gray-400 mb-2">Company/Hospital *</label>
                                     <input
                                         type="text"
-                                        required
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors ${errors.company ? 'border-red-500' : 'border-white/10'}`}
                                         value={formData.company}
                                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                        placeholder="City Hospital"
                                     />
+                                    {errors.company && <p className="text-red-400 text-sm mt-1">{errors.company}</p>}
                                 </div>
                             </div>
 
@@ -165,15 +231,16 @@ const RequestDemo = () => {
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Job Title</label>
                                     <input
                                         type="text"
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
                                         value={formData.jobTitle}
                                         onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
+                                        placeholder="Chief Radiologist"
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Team Size</label>
                                     <select
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
                                         value={formData.teamSize}
                                         onChange={(e) => setFormData({ ...formData, teamSize: e.target.value })}
                                     >
@@ -191,15 +258,16 @@ const RequestDemo = () => {
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Preferred Date</label>
                                     <input
                                         type="date"
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
                                         value={formData.preferredDate}
                                         onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
+                                        min={new Date().toISOString().split('T')[0]}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-2">Preferred Time</label>
+                                    <label className="block text-sm font-medium text-gray-400 mb-2">Preferred Time (IST)</label>
                                     <select
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
                                         value={formData.preferredTime}
                                         onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
                                     >
@@ -215,7 +283,7 @@ const RequestDemo = () => {
                                 <label className="block text-sm font-medium text-gray-400 mb-2">Additional Information</label>
                                 <textarea
                                     rows={3}
-                                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 resize-none"
+                                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 resize-none transition-colors"
                                     placeholder="Tell us about your specific needs..."
                                     value={formData.message}
                                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -224,14 +292,27 @@ const RequestDemo = () => {
 
                             <button
                                 type="submit"
-                                className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                                disabled={loading}
+                                className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                             >
-                                <Calendar className="w-5 h-5" />
-                                Request Demo
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        Submitting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Calendar className="w-5 h-5" />
+                                        Request Demo
+                                    </>
+                                )}
                             </button>
 
                             <p className="text-xs text-gray-500 text-center">
-                                By submitting, you agree to our Privacy Policy and Terms of Service.
+                                By submitting, you agree to our{' '}
+                                <Link to="/privacy" className="text-blue-400 hover:underline">Privacy Policy</Link>
+                                {' '}and{' '}
+                                <Link to="/terms" className="text-blue-400 hover:underline">Terms of Service</Link>.
                             </p>
                         </form>
                     </div>

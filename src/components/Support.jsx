@@ -1,24 +1,53 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MessageSquare, Send, X, Minimize2, Bot, User } from 'lucide-react';
+import { Mail, Phone, MessageSquare, Send, X, Minimize2, Bot, User, Loader2, CheckCircle } from 'lucide-react';
+import { useToast } from './Toast';
+import { supportStorage, validate } from '../utils/storage';
 
 const Support = () => {
+    const toast = useToast();
     const [formData, setFormData] = useState({
         subject: '',
         message: '',
         priority: 'medium'
     });
+    const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [ticketId, setTicketId] = useState(null);
     const [chatOpen, setChatOpen] = useState(false);
     const [chatMessages, setChatMessages] = useState([
         { from: 'bot', text: 'Hello! Welcome to DeepTek AI Support. How can I help you today?' }
     ]);
     const [chatInput, setChatInput] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validate.required(formData.subject) || !validate.required(formData.message)) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        setLoading(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Save to localStorage
+        const ticket = supportStorage.add({
+            ...formData,
+            status: 'open',
+        });
+
+        setLoading(false);
         setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 3000);
-        setFormData({ subject: '', message: '', priority: 'medium' });
+        setTicketId(ticket.id);
+        toast.success('Support ticket submitted successfully!');
+
+        // Reset after showing success
+        setTimeout(() => {
+            setSubmitted(false);
+            setFormData({ subject: '', message: '', priority: 'medium' });
+        }, 5000);
     };
 
     const handleChatSend = () => {
@@ -40,6 +69,10 @@ const Support = () => {
                 botResponse = "For password or login issues, please use the 'Forgot Password' link on the login page, or contact support@deeptek.ai.";
             } else if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
                 botResponse = "Hello! I'm here to help. What would you like assistance with today?";
+            } else if (userMessage.toLowerCase().includes('status') || userMessage.toLowerCase().includes('ticket')) {
+                botResponse = "You can check your ticket status in the Support section. Average response time is 4-6 hours for most issues.";
+            } else if (userMessage.toLowerCase().includes('pricing') || userMessage.toLowerCase().includes('plan')) {
+                botResponse = "For pricing information, please visit our Pricing page or contact our sales team at sales@deeptek.ai.";
             }
 
             setChatMessages(prev => [...prev, { from: 'bot', text: botResponse }]);
@@ -66,8 +99,8 @@ const Support = () => {
                         <Phone size={24} />
                     </div>
                     <h3 className="font-bold text-lg mb-2">Call Us</h3>
-                    <p className="text-gray-400 text-sm mb-4">Mon-Fri from 9am to 6pm</p>
-                    <a href="tel:+14155550100" className="text-green-400 font-medium hover:underline">+1 (415) 555-0100</a>
+                    <p className="text-gray-400 text-sm mb-4">Mon-Fri from 9am to 6pm IST</p>
+                    <a href="tel:+919876543210" className="text-green-400 font-medium hover:underline">+91 98765 43210</a>
                 </div>
 
                 <div className="bg-[#1E293B] border border-gray-700 rounded-xl p-6 flex flex-col items-center text-center">
@@ -90,8 +123,12 @@ const Support = () => {
 
                 {submitted && (
                     <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 flex items-center gap-3">
-                        <Send size={20} />
-                        Support ticket submitted successfully! We'll get back to you within 24 hours.
+                        <CheckCircle size={20} />
+                        <div>
+                            <span className="font-semibold">Support ticket submitted successfully!</span>
+                            {ticketId && <span className="text-sm ml-2">(Ticket #{ticketId})</span>}
+                            <p className="text-sm text-green-400/80">We'll get back to you within 24 hours.</p>
+                        </div>
                     </div>
                 )}
 
@@ -136,10 +173,20 @@ const Support = () => {
 
                     <button
                         type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors flex items-center gap-2"
+                        disabled={loading}
+                        className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-lg transition-colors flex items-center gap-2"
                     >
-                        <Send size={18} />
-                        Submit Ticket
+                        {loading ? (
+                            <>
+                                <Loader2 size={18} className="animate-spin" />
+                                Submitting...
+                            </>
+                        ) : (
+                            <>
+                                <Send size={18} />
+                                Submit Ticket
+                            </>
+                        )}
                     </button>
                 </form>
             </div>
@@ -182,8 +229,8 @@ const Support = () => {
                         {chatMessages.map((msg, i) => (
                             <div key={i} className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[80%] p-3 rounded-2xl ${msg.from === 'user'
-                                        ? 'bg-blue-600 text-white rounded-br-md'
-                                        : 'bg-gray-700 text-white rounded-bl-md'
+                                    ? 'bg-blue-600 text-white rounded-br-md'
+                                    : 'bg-gray-700 text-white rounded-bl-md'
                                     }`}>
                                     <div className="flex items-start gap-2">
                                         {msg.from === 'bot' && <Bot size={16} className="flex-shrink-0 mt-0.5" />}

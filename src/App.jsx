@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { ToastProvider } from './components/Toast';
 
 // Layouts - Loaded eagerly as it's needed immediately
 import PublicLayout from './components/public/PublicLayout';
@@ -190,57 +191,59 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            {/* Public Routes */}
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/careers/:id" element={<JobDetails />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:id" element={<BlogPost />} />
-              <Route path="/request-demo" element={<RequestDemo />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/security" element={<Security />} />
-              <Route path="/integrations" element={<Integrations />} />
-              <Route path="/changelog" element={<Changelog />} />
+      <ToastProvider>
+        <Router>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Public Routes */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/careers/:id" element={<JobDetails />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<BlogPost />} />
+                <Route path="/request-demo" element={<RequestDemo />} />
+                <Route path="/features" element={<Features />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/security" element={<Security />} />
+                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/changelog" element={<Changelog />} />
 
-              {/* 404 Page */}
-              <Route path="*" element={<NotFound />} />
-            </Route>
+                {/* 404 Page */}
+                <Route path="*" element={<NotFound />} />
+              </Route>
 
-            {/* Auth Routes */}
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <AuthWrapper onLogin={handleLogin} mode="login" />
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <AuthWrapper onLogin={handleLogin} mode="signup" />
-              }
-            />
+              {/* Auth Routes */}
+              <Route
+                path="/login"
+                element={
+                  isAuthenticated ? <Navigate to="/dashboard" /> : <AuthWrapper onLogin={handleLogin} mode="login" />
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  isAuthenticated ? <Navigate to="/dashboard" /> : <AuthWrapper onLogin={handleLogin} mode="signup" />
+                }
+              />
 
-            {/* Protected Dashboard Routes */}
-            <Route
-              path="/dashboard/*"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <DashboardLayout user={user} onLogout={handleLogout} />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Suspense>
-      </Router>
+              {/* Protected Dashboard Routes */}
+              <Route
+                path="/dashboard/*"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <DashboardLayout user={user} onLogout={handleLogout} />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Suspense>
+        </Router>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

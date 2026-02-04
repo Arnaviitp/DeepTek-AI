@@ -1,9 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Twitter, Linkedin, Github, Mail, Youtube, MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import { Twitter, Linkedin, Github, Mail, Youtube, MapPin, Phone, ArrowUpRight, CheckCircle, Loader2 } from 'lucide-react';
+import { useToast } from '../Toast';
+import { newsletterStorage, validate } from '../../utils/storage';
 
 const Footer = () => {
+    const toast = useToast();
     const currentYear = new Date().getFullYear();
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [subscribed, setSubscribed] = useState(false);
+
+    const handleNewsletterSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!validate.email(email)) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+
+        setLoading(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const result = newsletterStorage.add(email);
+
+        setLoading(false);
+
+        if (result.success) {
+            setSubscribed(true);
+            toast.success('Successfully subscribed to our newsletter!');
+        } else {
+            toast.warning('You are already subscribed!');
+        }
+    };
 
     const footerSections = [
         {
@@ -53,10 +84,11 @@ const Footer = () => {
                     {/* Brand Column */}
                     <div className="col-span-2 space-y-6">
                         <Link to="/" className="flex items-center gap-2 group">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow">
-                                D
-                            </div>
-                            <span className="text-xl font-bold text-white">DeepTek AI</span>
+                            <img
+                                src="/logo.png"
+                                alt="DeepTek AI"
+                                className="h-10 w-auto max-w-[220px] object-contain group-hover:scale-105 transition-transform duration-300"
+                            />
                         </Link>
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
                             Empowering radiologists and healthcare professionals with advanced AI diagnostics and streamlined workflow solutions.
@@ -72,11 +104,11 @@ const Footer = () => {
                                 hello@deeptek.ai
                             </a>
                             <a
-                                href="tel:+1-888-DEEPTEK"
+                                href="tel:+919876543210"
                                 className="flex items-center gap-2 text-sm text-gray-400 hover:text-blue-400 transition-colors"
                             >
                                 <Phone className="w-4 h-4" />
-                                1-888-DEEPTEK
+                                +91 98765 43210
                             </a>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <MapPin className="w-4 h-4" />
@@ -136,20 +168,35 @@ const Footer = () => {
                             <h4 className="text-white font-semibold mb-1">Stay updated</h4>
                             <p className="text-sm text-gray-400">Get the latest news and product updates.</p>
                         </div>
-                        <form className="flex gap-2 w-full md:w-auto" onSubmit={(e) => e.preventDefault()}>
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="flex-1 md:w-64 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
-                                aria-label="Email for newsletter"
-                            />
-                            <button
-                                type="submit"
-                                className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
-                            >
-                                Subscribe
-                            </button>
-                        </form>
+                        {subscribed ? (
+                            <div className="flex items-center gap-2 text-green-400">
+                                <CheckCircle className="w-5 h-5" />
+                                <span className="text-sm font-medium">Thanks for subscribing!</span>
+                            </div>
+                        ) : (
+                            <form className="flex gap-2 w-full md:w-auto" onSubmit={handleNewsletterSubmit}>
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="flex-1 md:w-64 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                                    aria-label="Email for newsletter"
+                                    disabled={loading}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 flex items-center gap-2"
+                                >
+                                    {loading ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        'Subscribe'
+                                    )}
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </div>
 

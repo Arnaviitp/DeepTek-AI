@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Briefcase, Clock, IndianRupee, Send, CheckCircle, Users, Zap, Heart } from 'lucide-react';
+import { ArrowLeft, MapPin, Briefcase, Clock, IndianRupee, Send, CheckCircle, Users, Zap, Heart, Loader2 } from 'lucide-react';
+import { useToast } from '../components/Toast';
+import { jobApplicationStorage, validate } from '../utils/storage';
 
 const JobDetails = () => {
+    const toast = useToast();
     const { id } = useParams();
     const [formData, setFormData] = useState({
         name: '',
@@ -12,7 +15,9 @@ const JobDetails = () => {
         resume: '',
         coverLetter: ''
     });
+    const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const jobs = {
         1: {
@@ -135,9 +140,51 @@ const JobDetails = () => {
 
     const job = jobs[id] || jobs[1];
 
-    const handleSubmit = (e) => {
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!validate.required(formData.name)) {
+            newErrors.name = 'Name is required';
+        }
+
+        if (!validate.required(formData.email)) {
+            newErrors.email = 'Email is required';
+        } else if (!validate.email(formData.email)) {
+            newErrors.email = 'Please enter a valid email';
+        }
+
+        if (!validate.required(formData.resume)) {
+            newErrors.resume = 'Resume URL is required';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        setLoading(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Save to localStorage
+        jobApplicationStorage.add({
+            ...formData,
+            jobId: id,
+            jobTitle: job.title,
+            jobDepartment: job.department,
+        });
+
+        setLoading(false);
         setSubmitted(true);
+        toast.success('Application submitted successfully!');
     };
 
     if (submitted) {
@@ -326,10 +373,20 @@ const JobDetails = () => {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                                disabled={loading}
+                                className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                             >
-                                <Send className="w-4 h-4" />
-                                Submit Application
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Submitting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Send className="w-4 h-4" />
+                                        Submit Application
+                                    </>
+                                )}
                             </button>
                         </form>
                     </div>
