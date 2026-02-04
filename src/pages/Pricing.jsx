@@ -6,7 +6,7 @@ const Pricing = () => {
     const plans = [
         {
             name: 'Starter',
-            price: '$0',
+            price: '₹0',
             period: '/month',
             desc: 'Perfect for trying out our platform.',
             features: [
@@ -20,7 +20,7 @@ const Pricing = () => {
         },
         {
             name: 'Pro',
-            price: '$299',
+            price: '₹4,999',
             period: '/month',
             desc: 'For growing clinics and radiologists.',
             features: [
@@ -87,8 +87,8 @@ const Pricing = () => {
                         <Link
                             to="/signup"
                             className={`w-full py-4 rounded-xl font-bold text-center transition-all ${plan.popular
-                                    ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                                    : 'bg-white text-black hover:bg-gray-200'
+                                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                                : 'bg-white text-black hover:bg-gray-200'
                                 }`}
                         >
                             {plan.cta}

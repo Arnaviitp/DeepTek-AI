@@ -61,7 +61,7 @@ const Contact = () => {
                                 <Phone className="w-6 h-6" />
                             </div>
                             <h3 className="font-bold text-lg mb-2">Phone</h3>
-                            <p className="text-gray-400 mb-3">Mon-Fri from 9am to 6pm PST</p>
+                            <p className="text-gray-400 mb-3">Mon-Fri from 9am to 6pm IST</p>
                             <a href="tel:+14155550100" className="text-green-400 hover:underline">+1 (415) 555-0100</a>
                         </div>
 
@@ -72,8 +72,7 @@ const Contact = () => {
                             <h3 className="font-bold text-lg mb-2">Office</h3>
                             <p className="text-gray-400 mb-3">Visit our headquarters</p>
                             <address className="text-purple-400 not-italic">
-                                123 Innovation Drive<br />
-                                San Francisco, CA 94105
+                                Ranchi, Jharkhand
                             </address>
                         </div>
 

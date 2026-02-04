@@ -115,7 +115,7 @@ const Terms = () => {
                 <section>
                     <h2 className="text-2xl font-bold mb-4">13. Governing Law</h2>
                     <p className="text-gray-300">
-                        These terms shall be governed by the laws of the State of California, without regard to its conflict of law provisions. Any disputes shall be resolved in the courts of San Francisco County, California.
+                        These terms shall be governed by the laws of India. Any disputes shall be resolved in the courts of Ranchi, Jharkhand.
                     </p>
                 </section>
 
@@ -135,7 +135,7 @@ const Terms = () => {
                         <p className="text-gray-300">
                             <strong>DeepTek AI Legal Team</strong><br />
                             Email: legal@deeptek.ai<br />
-                            Address: 123 Innovation Drive, San Francisco, CA 94105
+                            Address: Ranchi, Jharkhand, India
                         </p>
                     </div>
                 </section>

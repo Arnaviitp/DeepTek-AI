@@ -122,7 +122,7 @@ const Privacy = () => {
                         <p className="text-gray-300">
                             <strong>DeepTek AI Privacy Team</strong><br />
                             Email: privacy@deeptek.ai<br />
-                            Address: 123 Innovation Drive, San Francisco, CA 94105
+                            Address: Ranchi, Jharkhand, India
                         </p>
                     </div>
                 </section>

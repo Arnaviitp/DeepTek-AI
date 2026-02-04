@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"tailwindcss -i ./src/index.css -o ./src/tailwind.css --watch\"",
-    "build": "vite build",
+    "dev": "concurrently \"vite\" \"tailwindcss -i ./src/tailwind-input.css -o ./src/tailwind.css --watch\"",
+    "build": "tailwindcss -i ./src/tailwind-input.css -o ./src/tailwind.css --minify && vite build",
+    "build:css": "tailwindcss -i ./src/tailwind-input.css -o ./src/tailwind.css --minify",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "npm run build && npm run preview"
   },
   "dependencies": {
     "lucide-react": "^0.562.0",
